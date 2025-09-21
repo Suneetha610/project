@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <style>
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .message.warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar / Sidebar -->
+    <div class="sidebar">
+        <h2>Expense Tracker</h2>
+        <a href="{% url 'dashboard' %}">Dashboard</a> |
+        <a href="{% url 'add_expense' %}">Add Expense</a> |
+        <a href="{% url 'reports' %}">Reports</a> |
+        <a href="{% url 'category' %}">Categories</a> |
+        <a href="{% url 'profile' %}">Profile</a> |
+        <a href="{% url 'change_password' %}">Change Password</a> |
+        <a href="{% url 'logout' %}">Logout</a>
+    </div>
+
+    <!-- Content Block -->
+    <div class="main">
+        <!-- 🔹 Messages Display -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>
