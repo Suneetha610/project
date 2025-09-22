@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'mainapp.apps.MainappConfig',
+    'mainapp',
 ]
 
 
@@ -69,7 +69,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'expenses.wsgi.application'
+WSGI_APPLICATION = 'config.expenses.wsgi.application'
 
 
 # Database
