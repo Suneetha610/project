@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard</title>
+<style>
+body { margin:0; font-family:Arial; display:flex; height:100vh; }
+
+/* Sidebar */
+.sidebar {
+  width:220px; background:#2c3e50; color:white; height:100vh; padding:20px;
+}
+.sidebar h2 { text-align:center; margin-bottom:30px; }
+.sidebar a {
+  display:block; padding:12px; margin:8px 0; color:white; text-decoration:none; border-radius:6px;
+}
+.sidebar a:hover { background:#34495e; }
+
+/* Main content */
+.main { flex:1; display:flex; flex-direction:column; }
+
+/* Top Navbar */
+.navbar {
+  background:#fff; padding:10px 20px; display:flex;
+  justify-content:space-between; align-items:center; border-bottom:1px solid #ddd;
+}
+.navbar h2 { margin:0; color:#2c3e50; }
+
+/* Profile dropdown */
+.profile-dropdown { position:relative; }
+.profile-pic {
+  width:40px; height:40px; border-radius:50%; cursor:pointer; object-fit:cover;
+  border:2px solid #2c3e50;
+}
+.dropdown-content {
+  display:none; position:absolute; right:0; top:50px; background:#fff; 
+  box-shadow:0 4px 8px rgba(0,0,0,0.1); border-radius:8px; width:220px; padding:15px;
+  z-index:1000;
+}
+.dropdown-content p { margin:5px 0; font-size:14px; color:#333; }
+.dropdown-content a { display:block; margin-top:10px; color:#007BFF; text-decoration:none; font-size:14px; }
+.dropdown-content a:hover { text-decoration:underline; }
+
+/* Dashboard content */
+.content { padding:20px; overflow:auto; flex:1; }
+.cards { display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:20px; }
+.card {
+  background:#f4f4f4; padding:20px; border-radius:10px; text-align:center;
+  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+.card h3 { margin-bottom:10px; }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <h2>💰 Expense Tracker</h2>
+  <a href="{% url 'dashboard' %}">🏠 Dashboard</a>
+  <a href="{% url 'add_expense' %}">➕ Add Expense</a>
+  <a href="{% url 'reports' %}">📊 Reports</a>
+  <a href="{% url 'category' %}">📂 Categories</a>
+  <a href="{% url 'profile' %}">👤 Profile</a>
+  <a href="{% url 'change_password' %}">🔑 Change Password</a>
+  <a href="{% url 'logout' %}">🚪 Logout</a>
+</div>
+
+<!-- Main Area -->
+<div class="main">
+
+  <!-- Top Navbar -->
+  <div class="navbar">
+    <h2>Dashboard</h2>
+    <div class="profile-dropdown">
+      {% if profile.image %}
+        <img src="{{ profile.image.url }}" alt="Profile" class="profile-pic" onclick="toggleMenu()">
+      {% else %}
+        <img src="{% static 'images/default-avatar.png' %}" alt="Profile" class="profile-pic" onclick="toggleMenu()">
+      {% endif %}
+
+      <div id="menu" class="dropdown-content">
+        <p><strong>{{ request.user.username }}</strong></p>
+        <p>{{ request.user.email }}</p>
+        <p>{{ profile.phone }}</p>
+        <p>{{ profile.address }}</p>
+        <p><strong>Monthly Limit:</strong> ₹{{ profile.monthly_limit|default:"0.00" }}</p>
+        <p><strong>Total Income:</strong> ₹{{ profile.total_amount|default:"0.00" }}</p>
+        <p><strong>Savings:</strong> ₹{{ profile.savings|default:"0.00" }}</p>
+        <a href="{% url 'profile' %}">Edit Profile</a>
+        <a href="{% url 'logout' %}">Logout</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Cards -->
+  <div class="content">
+    <div class="cards">
+      <div class="card"><h3>Today's Expense</h3><p>₹{{ today_expense|default:"0.00" }}</p></div>
+      <div class="card"><h3>Yesterday's Expense</h3><p>₹{{ yesterday_expense|default:"0.00" }}</p></div>
+      <div class="card"><h3>Last 7 Days Expense</h3><p>₹{{ last_7_days_expense|default:"0.00" }}</p></div>
+      <div class="card"><h3>Last 30 Days Expense</h3><p>₹{{ last_30_days_expense|default:"0.00" }}</p></div>
+      <div class="card"><h3>Current Year Expenses</h3><p>₹{{ current_year_expense|default:"0.00" }}</p></div>
+      <div class="card"><h3>Total Expenses</h3><p>₹{{ total_expenses|default:"0.00" }}</p></div>
+      <div class="card"><h3>Total Listed Categories</h3><p>{{ categories_count }}</p></div>
+      <div class="card"><h3>Total Registered Users</h3><p>{{ users_count }}</p></div>
+      <!-- 🔹 User Budget Info -->
+      <div class="card"><h3>Monthly Limit</h3><p>₹{{ profile.monthly_limit|default:"0.00" }}</p></div>
+      <div class="card"><h3>Total Income</h3><p>₹{{ profile.total_amount|default:"0.00" }}</p></div>
+      <div class="card"><h3>Savings</h3><p>₹{{ profile.savings|default:"0.00" }}</p></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function toggleMenu() {
+  let menu = document.getElementById("menu");
+  menu.style.display = (menu.style.display === "block") ? "none" : "block";
+}
+</script>
+
+</body>
+</html>
