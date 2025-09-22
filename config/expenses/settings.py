@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 SECRET_KEY = 'django-insecure-0kan249abc3z&hk#m39kzu7)cuj&ugv4!#yb#cph#w6quqy)qi'
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # custom apps
     'mainapp',
 ]
 
@@ -38,12 +39,16 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'expenses.urls'
+# ✅ Corrected paths
+ROOT_URLCONF = 'config.expenses.urls'
+WSGI_APPLICATION = 'config.expenses.wsgi.application'
+
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'mainapp' / 'templates'],
+        # Global templates folder (better than per-app for larger projects)
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -54,8 +59,6 @@ TEMPLATES = [
         },
     },
 ]
-
-WSGI_APPLICATION = 'expenses.wsgi.application'
 
 
 # Database
@@ -85,7 +88,12 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']  # make sure 'static' folder exists
+STATICFILES_DIRS = [BASE_DIR / 'static']  # project-level static
+STATIC_ROOT = BASE_DIR / 'staticfiles'   # for collectstatic (deployment)
+
+# Media files (uploads like profile_pics)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
